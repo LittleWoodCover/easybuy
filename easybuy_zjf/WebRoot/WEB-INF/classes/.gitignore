@@ -1,0 +1,10 @@
+/Service
+/ServiceImpl
+/Servlet
+/Web
+/dao
+/daoImpl
+/database.properties
+/entity
+/log4j.properties
+/utils

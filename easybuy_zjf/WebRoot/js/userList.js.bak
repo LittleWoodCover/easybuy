@@ -1,0 +1,63 @@
+getPage("1");
+function getPage(pageindex) {
+	$.post(ctx+"/userServlet?opr=loadfenye","currPageNo="+pageindex,function(data){
+		// 鍔犺浇椤甸潰鍐呭
+		var $show=$("#m_right");
+		var $showarea=$("#m_m>table");
+		$showarea.html("");
+		$show.html("");
+		if(data.newslist==null){
+			$showarea.html("<h3>閹惰鲸鐡戦敍灞剧梾閺堝澹橀崚鎵祲閸忚櫕鏌婇梻浼欑磼</h3>");		
+		}else{
+			var $newslist=$(data.newslist);
+			$showarea.append("<tr><td width=\"200\" >"+"鐢ㄦ埛鍚嶇О"+"</td><td width=\"200\">"+"鐪熷疄濮撳悕"+"</td><td width=\"100\">"+"鎬у埆"+"</td><td width=\"100\">"+"绫诲瀷"+"</td><td width=\"200\" colspan=\"2\">"+"鎿嶄綔"+"</td></tr>"
+			);			
+			$newslist.each(function() {	
+				var Sex=null;
+				var Type=null;
+				if(this.sex==1){
+					Sex="男";
+				}else{
+					Sex="女";
+				}
+				if(this.type==1){
+					Type="管理员";
+				}else{
+					Type="用户";
+				}
+				$showarea.append("<tr><td>" +this.loginName
+						+"</td><td>" +this.userName
+						+"</td><td>" +Sex
+						+"</td><td>" +Type
+						+"</td><td><a href=\"#\">修改</a></td><td><a href=\"#\">删除</a></tr>"
+				);	
+					     							
+			});				
+		}
+		
+		//设置连接
+		var $showpage=$("<p align=\"right\">当前页面:["+data.currPageNo
+			+"/"+data.totalPageCount
+			+"]&nbsp;</p>"
+		);
+		$show.append($showpage);
+		if(data.currPageNo>1){
+			var $first=$("<a href=\"javascript:void();\">首页</a>").click(function() {
+				getPage("1");
+			});
+			var $prev=$("<a href=\"javascript:void();\">上一页</a>").click(function() {
+				getPage((data.currPageNo-1));
+			});
+			$showpage.append($first).append("&nbsp;").append($prev);
+		}
+		if(data.currPageNo<data.totalPageCount){
+			var $next=$("<a href=\"javascript:void();\">下一页</a>").click(function() {
+				getPage((data.currPageNo+1));
+			});
+			var $last=$("<a href=\"javascript:void();\">末页</a>").click(function() {
+				getPage(data.totalPageCount);
+			});
+			$showpage.append($next).append("&nbsp;").append($last);
+		}
+	},"json");
+}
